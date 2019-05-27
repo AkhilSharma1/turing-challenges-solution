@@ -11,13 +11,6 @@ export interface Address {
   mobPhone?: string;
 }
 
-// export interface User {
-//   username: string;
-//   readonly password: string;
-//   address: Address;
-//   creditCard: string;
-// }
-
 export interface User {
   customer_id: string;
   name: string;
