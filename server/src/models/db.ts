@@ -15,7 +15,7 @@ const pool = mysql.createPool(config);
 
 export class Connection {
 
-  async exec_query(query: string, params: string[]) {
+  async exec_query(query: string, params: (string|number)[]) {
     try {
       console.log('at exec_query' + query + JSON.stringify(params))
       const result = await pool.query(query, params);
