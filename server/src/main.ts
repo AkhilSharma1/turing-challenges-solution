@@ -13,6 +13,7 @@ async function bootstrap() {
   app.useGlobalFilters(new HttpExceptionFilter());
   app.useGlobalInterceptors(new LoggingInterceptor());
   app.setGlobalPrefix('api');
+  app.enableCors();
   await app.listen(process.env.PORT);
 }
 bootstrap();
