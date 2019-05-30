@@ -20,9 +20,7 @@ export class UserService {
     const { email } = registerDTO;
     //userEntry is {customerId, password}
     const userEntry = await UserModel.findUser(email);
-    console.log(userEntry)
     if (userEntry) {
-      console.log(2)
       throw new HttpException('User already exists!', HttpStatus.BAD_REQUEST);
     }
    console.log()

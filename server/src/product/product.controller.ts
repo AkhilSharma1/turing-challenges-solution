@@ -1,50 +1,81 @@
 import { ProductService } from './product.service';
 import {
   CreateProductDTO,
-  ProductResultsPerPage,
-  GetProductsInDepartmentDTO,
-  GetProductsInCategoryDTO,
+  PaginationDTO,
+  SearchProductsDTO,
+  UpdateProductDTO,
 } from './product.dto';
-import { Controller, Body, Post, Get, Param } from '@nestjs/common';
+import {
+  Controller,
+  Body,
+  Post,
+  Get,
+  Param,
+  Query,
+  Put,
+  Delete,
+  UsePipes,
+} from '@nestjs/common';
+import { ValidationPipe } from '@nestjs/common';
 
-@Controller('product')
+@Controller('products')
 export class ProductController {
   constructor(private productService: ProductService) {}
 
-  @Post()
-  async createProduct(@Body() createProductDTO: CreateProductDTO) {
-    return await this.productService.createProduct(createProductDTO);
+  // @Post()
+  // async createProduct(@Body() createProductDTO: CreateProductDTO) {
+  //   return await this.productService.createProduct(createProductDTO);
+  // }
+
+  @Get('/search')
+  // @UsePipes(new ValidationPipe({ transform: true }))
+  async searchProductsInCatalog(@Query() searchProductsDTO: SearchProductsDTO) {
+    return await this.productService.searchProductsInCatalog(searchProductsDTO);
   }
 
+  @Get()
+  async getAllProductsInCatalog(@Query() paginationDTO: PaginationDTO) {
+    console.log('called getAllProductsInCatalog');
+    return await this.productService.getAllProductsInCatalog(paginationDTO);
+  }
+
+  @Get('/department/:departmentId')
+  async getProductsInDepartment(
+    @Param() departmentId: string,
+    @Query() paginationDTO: PaginationDTO,
+  ) {
+    return await this.productService.getProductsInDepartment(
+      departmentId,
+      paginationDTO,
+    );
+  }
+
+  @Get('/category/:categoryId')
+  async getProductsInCategory(
+    @Param() categoryId: string,
+    @Query() paginationDTO: PaginationDTO,
+  ) {
+    return await this.productService.getProductsInCategory(
+      categoryId,
+      paginationDTO,
+    );
+  }
   @Get(':id')
   async getProduct(@Param('id') id: string) {
+    console.log('called with id' + id);
     return await this.productService.getProductById(id);
   }
 
-  @Get()
-  async getAllProductsInDepartment(
-    @Body() getProductsInDepartmentDTO: GetProductsInDepartmentDTO,
-  ) {
-    return await this.productService.getAllProductsInDepartment(
-      getProductsInDepartmentDTO,
-    );
-  }
+    @Put(':id')
+    async updateProduct(
+      @Param('id') id: string,
+      @Body() updateProductDTO: UpdateProductDTO,
+    ) {
+      return await this.productService.updateProductById(id, updateProductDTO);
+    }
 
-  @Get()
-  async getAllProductsInCatalog(
-    @Body() productResultsPerPage: ProductResultsPerPage,
-  ) {
-    return await this.productService.getAllProductsInCatalog(
-      productResultsPerPage,
-    );
-  }
-
-  @Get()
-  async getAllProductsInCategory(
-    @Body() getProductsInCategoryDTO: GetProductsInCategoryDTO,
-  ) {
-    return await this.productService.getAllProductsInCategory(
-      getProductsInCategoryDTO,
-    );
-  }
+    @Delete(':id')
+    async deleteProduct(@Param('id') id: string) {
+      return await this.productService.removeProductById(id);
+    }
 }

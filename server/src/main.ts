@@ -1,4 +1,5 @@
 import 'dotenv/config';
+import { ValidationPipe } from '@nestjs/common';
 import { LoggingInterceptor } from './shared/logging.interceptor';
 import { HttpExceptionFilter } from './shared/http-exception.filter';
 import { NestFactory } from '@nestjs/core';
@@ -13,6 +14,8 @@ async function bootstrap() {
   app.useGlobalFilters(new HttpExceptionFilter());
   app.useGlobalInterceptors(new LoggingInterceptor());
   app.setGlobalPrefix('api');
+  app.useGlobalPipes(new ValidationPipe({ transform: true }));
+
   await app.listen(process.env.PORT);
 }
 bootstrap();
