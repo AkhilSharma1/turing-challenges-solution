@@ -2,12 +2,13 @@ import { Product } from './../types/product';
 import {
   CreateProductDTO,
   UpdateProductDTO,
-  GetProductsInDepartmentDTO,
+  PaginationDTO,
+  SearchProductsDTO,
 } from './../product/product.dto';
 import { Connection } from './db';
 
 export class ProductModel {
-  static async createProduct(newProduct: CreateProductDTO){
+  static async createProduct(newProduct: CreateProductDTO) {
     //returns ??
     const query = 'CALL catalog_add_product_to_category(?, ?, ?, ?)';
     return new Connection().exec_query(query, [
@@ -21,16 +22,17 @@ export class ProductModel {
   static async getProductById(productId: string): Promise<Product> {
     //returns Product
     const query = 'CALL catalog_get_product_details(?)';
-    return new Connection().exec_query(query, [productId]);
+    return (await new Connection().exec_query(query, [productId]))[0];
   }
 
   static async updateProductById(
+    productId: string,
     updateProductDTO: UpdateProductDTO,
   ) {
     //returns t/f
     const query = 'CALL catalog_update_product(?, ?, ?, ?, ?)';
     return new Connection().exec_query(query, [
-      updateProductDTO.productId,
+      productId,
       updateProductDTO.name,
       updateProductDTO.description,
       updateProductDTO.price,
@@ -40,52 +42,59 @@ export class ProductModel {
 
   static async removeProductById(productId: string) {
     let query = 'CALL catalog_delete_product(?)';
-    new Connection().exec_query(query, [productId]);
+    return new Connection().exec_query(query, [productId]);
   }
 
-  static async getAllProductsInCatalog(
-    productResultsPerPage: ProductResultsPerPage,
-  ) {
+  static async getAllProductsInCatalog(paginationDTO: PaginationDTO) {
     //returns an array of {product_id, name}
     const query = 'CALL catalog_get_products_on_catalog(?, ?, ?)';
     return new Connection().exec_query(query, [
-      productResultsPerPage.productDescriptionLength,
-      productResultsPerPage.productsPerPage,
-      productResultsPerPage.offset,
+      // paginationDTO.productDescriptionLength,
+      // paginationDTO.productsPerPage,
+      // paginationDTO.offset,
+      1000,
+      50,
+      0,
     ]);
   }
 
-  static async (
-    getProductsInDepartmentDTO: GetProductsInDepartmentDTO,
+  static async getProductsInDepartment(
+    departmentId: string,
+    paginationDTO: PaginationDTO,
   ) {
     //returns [product_id, name]
+    const { productDescriptionLength, productsPerPage, offset } = paginationDTO;
+
     const query = 'CALL catalog_get_products_on_department(?, ?, ?, ?)';
     return new Connection().exec_query(query, [
-      getProductsInDepartmentDTO.departmentIdgetAllProductsInDepartment,
-      getProductsInDepartmentDTO.productDescriptionLength,
-      getProductsInDepartmentDTO.productsPerPage,
-      getProductsInDepartmentDTO.offset,
+      departmentId,
+      productDescriptionLength,
+      productsPerPage,
+      offset,
     ]);
   }
 
-  static async getAllProductsInCategory(
-    getProductsInCategoryDTO: GetProductsInCategoryDTO,
+  static async getProductsInCategory(
+    categoryId: string,
+    paginationDTO: PaginationDTO,
   ) {
     //returns [product_id, name]
     const query = 'CALL catalog_get_products_in_category(?, ?, ?, ?)';
     return new Connection().exec_query(query, [
-      getProductsInCategoryDTO.categoryId,
-      getProductsInCategoryDTO.productDescriptionLength,
-      getProductsInCategoryDTO.productsPerPage,
-      getProductsInCategoryDTO.offset,
+      categoryId,
+      paginationDTO.productDescriptionLength,
+      paginationDTO.productsPerPage,
+      paginationDTO.offset,
     ]);
   }
 
-  static async searchProducts(searchProductsDTO: SearchProductsDTO) {
-    //returns [product_id, name]
+  static async searchProductsInCatalog(searchProductsDTO: SearchProductsDTO) {
+    console.log('reached model ' + JSON.stringify(searchProductsDTO));
+
     const query = 'CALL catalog_search(?, ?, ?, ?, ?)';
-    return new Connection().exec_query(query, [
-      searchProductsDTO.searchString,
+    // return JSON.stringify(searchProductsDTO)
+    return await new Connection().exec_query(query, [
+      searchProductsDTO.query,
       searchProductsDTO.allWords,
       searchProductsDTO.productDescriptionLength,
       searchProductsDTO.productsPerPage,

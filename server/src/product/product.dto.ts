@@ -14,25 +14,24 @@ export interface CreateProductDTO {
 export type UpdateProductDTO = Partial<CreateProductDTO>;
 
 
-export interface ProductResultsPerPage {
-  productDescriptionLength = 500;
+export class PaginationDTO {
+  productDescriptionLength = 1000;
   productsPerPage = 50;
   offset = 0;
 }
 
 
-export interface GetProductsInDepartmentDTO{
-  departmentId : string;
-  pagination? : ProductResultsPerPage
-}
+// export interface GetProductsInDepartmentDTO{
+//   departmentId : string;
+//   pagination? : ProductResultsPerPage
+// }
 
-export interface GetProductsInCategoryDTO{
-  categoryID : string;
-  pagination? : ProductResultsPerPage
-}
+// export interface GetProductsInCategoryDTO{
+//   categoryID : string;
+//   pagination? : ProductResultsPerPage
+// }
 
-export interface SearchProductsDTO{
-  searchString: string;
+export class SearchProductsDTO extends PaginationDTO{
+  query: string;
   allWords = 'on';
-  pagination? : Pagination
 }

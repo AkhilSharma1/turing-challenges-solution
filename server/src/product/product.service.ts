@@ -2,7 +2,8 @@ import { ProductModel } from './../models/product.model';
 import {
   CreateProductDTO,
   UpdateProductDTO,
-  ProductResultsPerPage,
+  PaginationDTO,
+  SearchProductsDTO,
 } from './product.dto';
 import { Injectable } from '@nestjs/common';
 import { Product } from '../types/product';
@@ -27,10 +28,36 @@ export class ProductService {
   }
 
   async removeProductById(id: string) {
-    await ProductModel.removeProductById(id);
+    return await ProductModel.removeProductById(id);
   }
 
-  async getAllProductsInCatalog(productResultsPerPage: ProductResultsPerPage) {
-    await ProductModel.getAllProductsInCatalog(productResultsPerPage);
+  async getAllProductsInCatalog(productResultsPerPage: PaginationDTO) {
+    return await ProductModel.getAllProductsInCatalog(productResultsPerPage);
+  }
+
+  async getProductsInDepartment(
+    departmentId: string,
+    paginationDTO: PaginationDTO,
+  ) {
+    return await ProductModel.getProductsInDepartment(
+      departmentId,
+      paginationDTO,
+    );
+  }
+
+  async getProductsInCategory(
+    categoryId: string,
+    paginationDTO: PaginationDTO,
+  ) {
+    return await ProductModel.getProductsInCategory(
+      categoryId,
+      paginationDTO,
+    );
+  }
+
+   async searchProductsInCatalog(searchProductsDTO: SearchProductsDTO) {
+    //returns [product_id, name]
+
+    return await ProductModel.searchProductsInCatalog(searchProductsDTO);
   }
 }

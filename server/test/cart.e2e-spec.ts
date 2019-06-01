@@ -36,7 +36,7 @@ import { RegisterDTO } from 'src/auth/auth.dto';
 describe('CUSTOMER', () => {
   let product: Product;
 
-  it('could see list of products', () => {
+  it('could add a product to cart', () => {
     return request(app)
       .get(`/products`)
       .expect(({ body }) => {
@@ -46,7 +46,7 @@ describe('CUSTOMER', () => {
       .expect(HttpStatus.OK);
   });
 
-  it('could read a product', () => {
+  it('could get the cart', () => {
     return request(app)
       .get(`/products/${product.product_id}`)
       .expect(({ body }) => {
@@ -57,7 +57,7 @@ describe('CUSTOMER', () => {
       .expect(HttpStatus.OK);
   });
 
-  it('could search for products', () => {
+  it('could delete product from cart', () => {
     return request(app)
       .get(`/products/search?query=Iris`)
       .expect(({ body }) => {

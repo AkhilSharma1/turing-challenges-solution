@@ -1,4 +1,5 @@
 import 'dotenv/config';
+import { ValidationPipe } from '@nestjs/common';
 import { LoggingInterceptor } from './shared/logging.interceptor';
 import { HttpExceptionFilter } from './shared/http-exception.filter';
 import { NestFactory } from '@nestjs/core';
