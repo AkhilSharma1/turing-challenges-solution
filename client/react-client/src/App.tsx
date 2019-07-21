@@ -2,6 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import logo from './logo.svg';
 import { AppRouter } from './AppRouter';
+import { Footer } from './components/Footer.component';
 
 const App: React.FC = () => {
   React.useEffect(() => {
@@ -11,10 +12,12 @@ const App: React.FC = () => {
 
 
   return (
-    // <AppRouter></AppRouter>
-    <div className="container">
-      <AppRouter />
+    <div className="root">
+      {/* <AppRouter /> */}
+      <Footer/>
     </div>
+
+    
 
   );
 }
