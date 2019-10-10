@@ -14,8 +14,7 @@ async function bootstrap() {
   app.useGlobalFilters(new HttpExceptionFilter());
   app.useGlobalInterceptors(new LoggingInterceptor());
   app.setGlobalPrefix('api');
-  app.useGlobalPipes(new ValidationPipe({ transform: true }));
-
+  app.enableCors();
   await app.listen(process.env.PORT);
 }
 bootstrap();
